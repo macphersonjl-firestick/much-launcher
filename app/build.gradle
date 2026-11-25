@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.much.launcher'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.much.launcher'
+        minSdk 22
+        targetSdk 34
+        // Bumped automatically by the GitHub build so each build installs over the last one
+        versionCode((System.getenv('GITHUB_RUN_NUMBER') ?: '1') as int)
+        versionName "1.0.${System.getenv('GITHUB_RUN_NUMBER') ?: '0'}"
+    }
+
+    // One fixed signing key, so every new build installs as an update instead of a different app
+    signingConfigs {
+        much {
+            storeFile file('much-launcher.keystore')
+            storeType 'pkcs12'
+            storePassword 'muchlauncher'
+            keyAlias 'much'
+            keyPassword 'muchlauncher'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.much
+        }
+        debug {
+            signingConfig signingConfigs.much
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+}
