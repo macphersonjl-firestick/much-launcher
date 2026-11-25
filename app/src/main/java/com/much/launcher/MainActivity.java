@@ -57,14 +57,22 @@ public class MainActivity extends Activity {
         s.setDomStorageEnabled(true);
         s.setMediaPlaybackRequiresUserGesture(false); // lets the ICQ sound play straight away
         s.setAllowFileAccess(true);
-        s.setUseWideViewPort(true);
-        s.setLoadWithOverviewMode(true);
+        // Show the page at the TV's real size; the page scales itself to fit the screen
+        s.setUseWideViewPort(false);
+        s.setLoadWithOverviewMode(false);
+        s.setSupportZoom(false);
+        s.setBuiltInZoomControls(false);
+        s.setTextZoom(100);
+        web.setInitialScale(0);
+        web.setVerticalScrollBarEnabled(false);
+        web.setHorizontalScrollBarEnabled(false);
 
         web.setWebChromeClient(new WebChromeClient());
         web.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 pageReady = true;
+                view.evaluateJavascript("window.fit&&window.fit()", null);
             }
 
             @SuppressWarnings("deprecation")
@@ -106,6 +114,7 @@ public class MainActivity extends Activity {
         hideSystemUi();
         web.onResume();
         web.requestFocus();
+        js("window.fit&&window.fit()");
         js("window.onLauncherResume&&window.onLauncherResume()");
     }
 
